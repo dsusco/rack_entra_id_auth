@@ -1,11 +1,11 @@
 module RackEntraIdAuth
   class MockMiddleware
-    def initialize (app, config = {})
+    def initialize (app)
       @app = app
-      @config = RackEntraIdAuth.config.ruby_saml_settings.merge(config)
     end
 
     def call (env)
+      @app.call(env)
     end
   end
 end

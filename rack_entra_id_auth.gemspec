@@ -23,6 +23,7 @@ Gem::Specification.new do |s|
     Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   end
 
+  s.add_dependency 'rack', '>= 3.0.0'
   s.add_dependency 'rake', '>= 13.1.0'
   s.add_dependency 'ruby-saml', '>= 1.16.0'
 
