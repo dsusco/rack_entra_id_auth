@@ -11,12 +11,12 @@ module RackEntraIdAuth
     config_accessor :mock_server, default: true
     config_accessor :mock_attributes, default: {}
     config_accessor :session_key, default: :entra_id
-    config_accessor :session_value_proc, default: Proc.new { |response|
-      response.attributes.all.inject({ name_id: response.name_id }) do |attributes, (key, value)|
+    config_accessor :session_value_proc, default: Proc.new { |attributes|
+      attributes.inject({}) do |memo, (key, value)|
         key = key.split('/').last
-        value = value.first if value.length === 1
-        attributes[key.to_sym] = value
-        attributes
+        value = value.first if value.kind_of?(Array) and value.length === 1 and !key.eql?('groups')
+        memo[key.to_sym] = value
+        memo
       end
     }
     config_accessor :skip_single_logout, default: false

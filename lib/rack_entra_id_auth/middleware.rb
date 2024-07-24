@@ -55,7 +55,7 @@ module RackEntraIdAuth
 
       # SP initiatied single sign-on response
       if entra_id_request.login_response?
-        log(env, "Received single login response…")
+        log(env, 'Received single login response…')
 
         auth_response = entra_id_request.saml_auth_response()
 
@@ -71,10 +71,10 @@ module RackEntraIdAuth
           return internal_server_error_response('Unsuccessful login reponse from Entra ID.')
         end
 
-        log(env, "Initializing session and redirecting to relay state URL…")
+        log(env, 'Initializing session and redirecting to relay state URL…')
 
         # initialize the session with the response's SAML attributes
-        request.session[RackEntraIdAuth.config.session_key] = RackEntraIdAuth.config.session_value_proc.call(auth_response)
+        request.session[RackEntraIdAuth.config.session_key] = RackEntraIdAuth.config.session_value_proc.call(auth_response.attributes.all)
 
         return found_redirect_response(
                  entra_id_request.relay_state_url || RackEntraIdAuth.config.login_relay_state_url || entra_id_request.base_url,
@@ -83,7 +83,7 @@ module RackEntraIdAuth
 
       # IdP initiatied single logout request
       if entra_id_request.logout_request?
-        log(env, "Received single logout request…")
+        log(env, 'Received single logout request…')
 
         logout_request = entra_id_request.saml_logout_request()
 
@@ -93,7 +93,7 @@ module RackEntraIdAuth
           return internal_server_error_response("Invalid logout request from Entra ID: #{logout_request.errors.first}")
         end
 
-        log(env, "Destroying session and sending logout response to Entra ID…")
+        log(env, 'Destroying session and sending logout response to Entra ID…')
 
         # destroy the session
         request.session.send (request.session.respond_to?(:destroy) ? :destroy : :clear)
@@ -113,7 +113,7 @@ module RackEntraIdAuth
 
       # SP initiated single logout response
       if entra_id_request.logout_response?
-        log(env, "Received single logout response…")
+        log(env, 'Received single logout response…')
 
         logout_response = entra_id_request.saml_logout_response()
 
@@ -124,12 +124,12 @@ module RackEntraIdAuth
         end
 
         if !logout_response.success?
-          log(env, "Unsuccessful single logout reponse from Entra ID.")
+          log(env, 'Unsuccessful single logout reponse from Entra ID.')
 
           return internal_server_error_response('Unsuccessful logout reponse from Entra ID.')
         end
 
-        log(env, "Destroying session and redirecting to relay state URL…")
+        log(env, 'Destroying session and redirecting to relay state URL…')
 
         # session should already be destroyed from SP initiated logout/single logout request, but just to be safe…
         request.session.send (request.session.respond_to?(:destroy) ? :destroy : :clear)
@@ -155,23 +155,23 @@ module RackEntraIdAuth
 
     protected
 
-      def found_redirect_response (url, message = "Redirecting to URL")
+      def found_redirect_response (url, message = 'Redirecting to URL')
         [ 302,
           { 'location' => url,
             'content-type' => 'text/plain' },
           [ "#{message}: #{url}" ] ]
       end
 
-      def internal_server_error_response (content = "Internal server error")
+      def internal_server_error_response (content = 'Internal server error')
         [ 500,
           { 'content-type' => 'text/html',
             'content-length' => content.length},
-            [ content] ]
+            [ content ] ]
       end
 
       def log(env, message, level = :info)
         env['rack.logger'] ||= Rails.logger if defined?(Rails.logger)
-        message = "rack-entra-id-auth: #{message}"
+        message = "rack_entra_id_auth: #{message}"
 
         if env['rack.logger']
           env['rack.logger'].send(level, message)
