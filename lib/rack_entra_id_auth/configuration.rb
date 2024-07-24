@@ -6,6 +6,8 @@ module RackEntraIdAuth
     config_accessor :login_relay_state_url
     config_accessor :logout_path, default: '/logout'
     config_accessor :logout_relay_state_url
+    # mock_server must be set in config/application.rb or environment-specific configuration files
+    # i.e. it must happen before initializers as it's used in the initizlier created in the Railtie
     config_accessor :mock_server, default: true
     config_accessor :mock_attributes, default: {}
     config_accessor :session_key, default: :entra_id

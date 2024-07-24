@@ -14,19 +14,19 @@ Gem::Specification.new do |s|
 
   s.metadata = {
     'bug_tracker_uri'   => "#{s.homepage}/issues",
-    'changelog_uri'     => "#{s.homepage}/releases/tag/v#{RackEntraIdAuth::VERSION}",
+    'changelog_uri'     => "#{s.homepage}/releases/tag/v#{s.version}",
     'homepage_uri'      => s.homepage,
     'source_code_uri'   => s.homepage
   }
 
   s.files = Dir.chdir(File.expand_path(__dir__)) do
-    Dir['{app,config,db,lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
+    Dir['{lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   end
 
-  s.add_dependency 'rack', '>= 3.0.0'
-  s.add_dependency 'rake', '>= 13.1.0'
-  s.add_dependency 'ruby-saml', '>= 1.16.0'
+  s.add_dependency 'rack', '~> 3.0'
+  s.add_dependency 'rake', '~> 13.0'
+  s.add_dependency 'ruby-saml', '~> 1.10'
 
-  s.add_development_dependency 'minitest', '>= 5.23.0'
-  s.add_development_dependency 'rubocop', '>= 1.64.0'
+  s.add_development_dependency 'minitest', '~> 5.14'
+  s.add_development_dependency 'rubocop', '~> 1.0'
 end
