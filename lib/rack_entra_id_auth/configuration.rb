@@ -14,14 +14,14 @@ module RackEntraIdAuth
     config_accessor :session_value_proc, default: Proc.new { |attributes|
       attributes.inject({}) do |memo, (key, value)|
         key = key.split('/').last
-        value = value.first if value.kind_of?(Array) and value.length === 1 and !key.eql?('groups')
-        memo[key.to_sym] = value
+        value = value.first if value.kind_of?(Array) and value.length.eql?(1) and !key.eql?('groups')
+        memo[key] = value
         memo
       end
     }
     config_accessor :skip_single_logout, default: false
 
-    # ruby-saml ID Provider settings
+    # Ruby SAML ID Provider settings
     config_accessor :idp_entity_id
     config_accessor :idp_sso_service_url
     config_accessor :idp_slo_service_url
@@ -34,7 +34,7 @@ module RackEntraIdAuth
     config_accessor :idp_name_qualifier
     config_accessor :valid_until
 
-    # ruby-saml Service Provider settings
+    # Ruby SAML Service Provider settings
     config_accessor :sp_entity_id
     config_accessor :assertion_consumer_service_url
     config_accessor :single_logout_service_url
@@ -57,7 +57,7 @@ module RackEntraIdAuth
     config_accessor :authn_context_comparison
     config_accessor :authn_context_decl_ref
 
-    # ruby-saml workflow settings
+    # Ruby SAML workflow settings
     config_accessor :security
     config_accessor :soft
 

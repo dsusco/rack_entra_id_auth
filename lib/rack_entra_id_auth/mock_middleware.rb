@@ -23,7 +23,7 @@ module RackEntraIdAuth
       if entra_id_request.login? and request.request_method.eql?('POST')
         log(env, 'Initializing session and redirecting to relay state URL…')
 
-        attributes = RackEntraIdAuth.config.mock_attributes[request.params['username'].to_sym] || {}
+        attributes = RackEntraIdAuth.config.mock_attributes[request.params['username']] || {}
         redirect_url = request.params['relay_state'] ||
                        request.params['RelayState'] ||
                        RackEntraIdAuth.config.login_relay_state_url ||
