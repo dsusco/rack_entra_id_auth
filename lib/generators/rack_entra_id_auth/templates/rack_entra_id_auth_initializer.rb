@@ -18,8 +18,8 @@ RackEntraIdAuth.configure do |config|
   # The login/logout paths are used by the middleware to create single
   # sign-on/logout requests and redirect them to the IdP SSO/SLO Service URLs
   # set below, respectively. It's handy to define these as routes in your
-  # application so you can use the route helpers in your views.
-  #TODO route generator
+  # application so you can use the route helpers in your views. You can do so
+  # with the `rack_entra_id_auth:routes` generator.
   # config.login_path  = '/login'
   # config.logout_path = '/logout'
 
