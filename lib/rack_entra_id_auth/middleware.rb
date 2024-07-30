@@ -77,12 +77,12 @@ module RackEntraIdAuth
         request.session[RackEntraIdAuth.config.session_key] = RackEntraIdAuth.config.session_value_proc.call(auth_response.attributes.all)
 
         return found_redirect_response(
-                 entra_id_request.relay_state_url || RackEntraIdAuth.config.login_relay_state_url || entra_id_request.base_url,
+                 entra_id_request.relay_state_url,
                  'Received single login response, redirecting to relay state URL')
       end
 
       # IdP initiatied single logout request
-      if entra_id_request.logout_request?
+      if entra_id_request.logout_request? and !RackEntraIdAuth.config.skip_single_logout
         log(env, 'Received single logout request…')
 
         logout_request = entra_id_request.saml_logout_request()
@@ -102,7 +102,7 @@ module RackEntraIdAuth
           request_id: logout_request.id,
           logout_message: nil,
           params: {
-            :RelayState => entra_id_request.relay_state_url || RackEntraIdAuth.config.logout_relay_state_url || entra_id_request.base_url
+            :RelayState => entra_id_request.relay_state_url
           },
           logout_status_code: nil)
 
@@ -135,7 +135,7 @@ module RackEntraIdAuth
         request.session.send (request.session.respond_to?(:destroy) ? :destroy : :clear)
 
         return found_redirect_response(
-                 entra_id_request.relay_state_url || RackEntraIdAuth.config.logout_relay_state_url || entra_id_request.base_url,
+                 entra_id_request.relay_state_url,
                  'Received single logout response, redirecting to relay state URL')
       end
 
