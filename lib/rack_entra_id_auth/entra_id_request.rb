@@ -233,8 +233,8 @@ module RackEntraIdAuth
 
     private
 
-    def saml_response
-      request.get_header('rack.request.form_hash').try(:[], 'SAMLResponse')
-    end
+      def saml_response
+        request.get_header('rack.request.form_hash').try(:[], 'SAMLResponse')
+      end
   end
 end
