@@ -18,8 +18,9 @@ module RackEntraIdAuth
       "#{request.base_url}#{request.path}".sub(Regexp.new("#{request.path_info}$"), '')
     end
 
-    # Returns whether the request is a Service Provider initiated sign-on request.
-    # Returns true if the request's path info equals the login path configuration (login_path), otherwise returns false.
+    # Returns whether the request is a Service Provider initiated sign-on
+    # request. Returns true if the request's path info equals the login path
+    # configuration (login_path), otherwise returns false.
     #
     # @return [Bool]
     #
@@ -27,8 +28,11 @@ module RackEntraIdAuth
       request.path_info.eql?(RackEntraIdAuth.config.login_path)
     end
 
-    # Returns whether the request contains a single sign-on response (for Service Provider initiated single sign-on requests).
-    # Returns true if the request's header contains a SAMLResponse and if the request's base_url and path match the ACS service url setting (assertion_consumer_service_url), otherwise returns false.
+    # Returns whether the request contains a single sign-on response (for
+    # Service Provider initiated single sign-on requests). Returns true if the
+    # request's header contains a SAMLResponse and if the request's base_url and
+    # path match the ACS service url setting (assertion_consumer_service_url),
+    # otherwise returns false.
     #
     # @return [Bool]
     #
@@ -36,8 +40,9 @@ module RackEntraIdAuth
       saml_response.present? and "#{request.base_url}#{request.path}".eql?(@saml_settings.assertion_consumer_service_url)
     end
 
-    # Returns whether the request is a Service Provider initiated logout request.
-    # Returns true if the request's path info equals the logout path configuration (logout_path), otherwise returns false.
+    # Returns whether the request is a Service Provider initiated logout
+    # request. Returns true if the request's path info equals the logout path
+    # configuration (logout_path), otherwise returns false.
     #
     # @return [Bool]
     #
@@ -45,8 +50,11 @@ module RackEntraIdAuth
       request.path_info.eql?(RackEntraIdAuth.config.logout_path)
     end
 
-    # Returns whether the request contains a single logout request (for ID Provider initiated single logout requests).
-    # Returns true if the request contains a SAMLRequest query parameter and if the request's base_url and path match the single logout service url setting (single_logout_service_url), otherwise returns false.
+    # Returns whether the request contains a single logout request (for ID
+    # Provider initiated single logout requests). Returns true if the request
+    # contains a SAMLRequest query parameter and if the request's base_url and
+    # path match the single logout service url setting
+    # (single_logout_service_url), otherwise returns false.
     #
     # @return [Bool]
     #
@@ -54,8 +62,11 @@ module RackEntraIdAuth
       request.params['SAMLRequest'].present? and "#{request.base_url}#{request.path}".eql?(@saml_settings.single_logout_service_url)
     end
 
-    # Returns whether the request contains a single logout response for Service Provider initiated logout request.
-    # Returns true if the request contains a SAMLResponse query parameter and if the request's base_url and path match the single logout service url setting (single_logout_service_url), otherwise returns false.
+    # Returns whether the request contains a single logout response for Service
+    # Provider initiated logout request. Returns true if the request contains a
+    # SAMLResponse query parameter and if the request's base_url and path match
+    # the single logout service url setting (single_logout_service_url),
+    # otherwise returns false.
     #
     # @return [Bool]
     #
@@ -63,25 +74,33 @@ module RackEntraIdAuth
       request.params['SAMLResponse'].present? and "#{request.base_url}#{request.path}".eql?(@saml_settings.single_logout_service_url)
     end
 
-    # Returns the RelayState in the header of the request.
+    # Returns the RelayState in the header of the request or its query
+    # parameters.
     #
     # @return [String]
     #
     def relay_state_url
-      request.get_header('rack.request.form_hash')['RelayState']
+      request.get_header('rack.request.form_hash')['RelayState'] || request.params['RelayState']
     end
 
     # A single sign-on response for the SAMLResponse in the request's header.
-    # This is the response sent by the ID Provider for Service Provider initiated single sign-on requests.
+    # This is the response sent by the ID Provider for Service Provider
+    # initiated single sign-on requests.
     #
-    # @param auth_request_id [String] If provided, check that the inResponseTo in the response matches the uuid of the sign-on request that initiated the response.
+    # @param auth_request_id [String] If provided, check that the inResponseTo
+    #        in the response matches the uuid of the sign-on request that
+    #        initiated the response.
     # @param skip_conditions [Bool] Skip the conditions validation.
-    # @param allowed_clock_drift [Float] The allowed clock drift when checking time stamps.
-    # @param skip_subject_confirmation [Bool] Skip the subject confirmation validation.
-    # @param skip_recipient_check [Bool] Skip the recipient validation of the subject confirmation element.
+    # @param allowed_clock_drift [Float] The allowed clock drift when checking
+    #        time stamps.
+    # @param skip_subject_confirmation [Bool] Skip the subject confirmation
+    #        validation.
+    # @param skip_recipient_check [Bool] Skip the recipient validation of the
+    #        subject confirmation element.
     # @param skip_audience [Bool] Skip the audience validation.
     #
-    # @return [OneLogin::RubySaml::Response] A single sign-on response for a Service Provideer initiated single sign-on request.
+    # @return [OneLogin::RubySaml::Response] A single sign-on response for a
+    #         Service Provideer initiated single sign-on request.
     #
     def saml_auth_response (auth_request_id: request.session[:auth_request_id], skip_conditions: false, allowed_clock_drift: nil, skip_subject_confirmation: false, skip_recipient_check: false, skip_audience: false)
       response = OneLogin::RubySaml::Response.new(
@@ -100,13 +119,18 @@ module RackEntraIdAuth
       response
     end
 
-    # A single logout request for the SAMLRequest in the request's query parameters.
-    # This is the request sent by the ID Provider for ID Provider initiated single logout requests.
+    # A single logout request for the SAMLRequest in the request's query
+    # parameters. This is the request sent by the ID Provider for ID Provider
+    # initiated single logout requests.
     #
-    # @param allowed_clock_drift [Float] The allowed clock drift when checking time stamps.
-    # @param relax_signature_validation [Bool] If true and there's no ID Provider certs in the settings then ignore the signature validation on the request.
+    # @param allowed_clock_drift [Float] The allowed clock drift when checking
+    #        time stamps.
+    # @param relax_signature_validation [Bool] If true and there's no ID
+    #        Provider certs in the settings then ignore the signature validation
+    #        on the request.
     #
-    # @return [OneLogin::RubySaml::Logoutresponse] A single logout response for a Service Provideer initiated single logout request.
+    # @return [OneLogin::RubySaml::Logoutresponse] A single logout response for
+    #         a Service Provideer initiated single logout request.
     #
     def saml_logout_request (allowed_clock_drift: nil, relax_signature_validation: false)
       OneLogin::RubySaml::SloLogoutrequest.new(
@@ -116,13 +140,19 @@ module RackEntraIdAuth
           :relax_signature_validation => relax_signature_validation })
     end
 
-    # A single logout response for the SAMLResponse in the request's query parameters.
-    # This is the response sent by the ID Provider for Service Provider initiated single logout requests.
+    # A single logout response for the SAMLResponse in the request's query
+    # parameters. This is the response sent by the ID Provider for Service
+    # Provider initiated single logout requests.
     #
-    # @param logout_request_id [String] If provided, check that the inResponseTo in the response matches the uuid of the logout request that initiated the response.
-    # @param relax_signature_validation [Bool] If true and there's no ID Provider certs in the settings then ignore the signature validation on the response.
+    # @param logout_request_id [String] If provided, check that the inResponseTo
+    #        in the response matches the uuid of the logout request that
+    #        initiated the response.
+    # @param relax_signature_validation [Bool] If true and there's no ID
+    #        Provider certs in the settings then ignore the signature validation
+    #        on the response.
     #
-    # @return [OneLogin::RubySaml::Logoutresponse] A single logout response for a Service Provideer initiated single logout request.
+    # @return [OneLogin::RubySaml::Logoutresponse] A single logout response for
+    #         a Service Provideer initiated single logout request.
     #
     def saml_logout_response (logout_request_id: request.session[:logout_request_id], relax_signature_validation: false)
       logout_response = OneLogin::RubySaml::Logoutresponse.new(
@@ -138,13 +168,18 @@ module RackEntraIdAuth
       logout_response
     end
 
-    # Returns a single logout reponse URL for the settings provided.
-    # Used for ID Provider initiated log outs.
+    # Returns a single logout reponse URL for the settings provided. Used for ID
+    # Provider initiated log outs.
     #
-    # @param request_id [String] The ID of the LogoutRequest sent by this SP to the IdP. That ID will be placed as the InResponseTo in the logout response.
-    # @param logout_message [String] The message to be placed as StatusMessage in the logout response.
-    # @param params [Hash] Extra query parameters to be added to the URL (e.g. RelayState).
-    # @param logout_status_code [String] The StatusCode to be placed as StatusMessage in the logout response.
+    # @param request_id [String] The ID of the LogoutRequest sent by this SP to
+    #        the IdP. That ID will be placed as the InResponseTo in the logout
+    #        response.
+    # @param logout_message [String] The message to be placed as StatusMessage
+    #        in the logout response.
+    # @param params [Hash] Extra query parameters to be added to the URL (e.g.
+    #        RelayState).
+    # @param logout_status_code [String] The StatusCode to be placed as
+    #        StatusMessage in the logout response.
     #
     # @return [String]
     #
@@ -157,10 +192,13 @@ module RackEntraIdAuth
         logout_status_code)
     end
 
-    # Returns a single logout request URL for the settings provided if an ID Provider single logout target URL is present in the settings (idp_slo_service_url), otherwise returns nil.
-    # Used for Service Provider initiated log outs.
+    # Returns a single logout request URL for the settings provided if an ID
+    # Provider single logout target URL is present in the settings
+    # (idp_slo_service_url), otherwise returns nil. Used for Service Provider
+    # initiated log outs.
     #
-    # @param params [Hash] Extra query parameters to be added to the URL (e.g. RelayState).
+    # @param params [Hash] Extra query parameters to be added to the URL (e.g.
+    #        RelayState).
     #
     # @return [String|nil]
     #
@@ -176,10 +214,11 @@ module RackEntraIdAuth
       end
     end
 
-    # Returns a single sign-on authentication request URL for the settings provided.
-    # Used for Service Provider initiated sign-ins.
+    # Returns a single sign-on authentication request URL for the settings
+    # provided. Used for Service Provider initiated sign-ins.
     #
-    # @param params [Hash] Extra query parameters to be added to the URL (e.g. RelayState).
+    # @param params [Hash] Extra query parameters to be added to the URL (e.g.
+    #        RelayState).
     #
     # @return [String]
     #
