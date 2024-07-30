@@ -13,7 +13,8 @@ module RackEntraIdAuth
             record.data = session_data
 
             if entra_id_request.login_response?
-              auth_response = auth_response = entra_id_request.saml_auth_response()
+              # store the sessionindex for IdP initiated single logout requests
+              auth_response = entra_id_request.saml_auth_response()
 
               record.sessionindex = auth_response.sessionindex
             end
@@ -36,6 +37,8 @@ module RackEntraIdAuth
 
           logger.silence do
             if entra_id_request.logout_request?
+              # delete all the sessions with sessionindexes declared in the IdP
+              # initiated single logout request
               logout_request = entra_id_request.saml_logout_request()
               sessions = session_class.where(sessionindex: logout_request.session_indexes)
               data = sessions.last.data rescue ''
