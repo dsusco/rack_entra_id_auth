@@ -6,8 +6,9 @@ module RackEntraIdAuth
     config_accessor :login_relay_state_url
     config_accessor :logout_path, default: '/logout'
     config_accessor :logout_relay_state_url
-    # mock_server must be set in config/application.rb or environment-specific configuration files
-    # i.e. it must happen before initializers as it's used in the initizlier created in the Railtie
+    # mock_server must be set in `config/application.rb` or an
+    # environment-specific configuration file. I.e. it must happen before
+    # initializers as it's used in the initializer created in the Railtie
     config_accessor :mock_server, default: true
     config_accessor :mock_attributes, default: {}
     config_accessor :session_key, default: :entra_id
@@ -19,9 +20,9 @@ module RackEntraIdAuth
         memo
       end
     }
-    config_accessor :skip_single_logout, default: false
+    config_accessor :skip_single_logout, default: true
 
-    # Ruby SAML ID Provider settings
+    # Ruby SAML ID Provider Settings
     config_accessor :idp_entity_id
     config_accessor :idp_sso_service_url
     config_accessor :idp_slo_service_url
@@ -34,7 +35,7 @@ module RackEntraIdAuth
     config_accessor :idp_name_qualifier
     config_accessor :valid_until
 
-    # Ruby SAML Service Provider settings
+    # Ruby SAML Service Provider Settings
     config_accessor :sp_entity_id
     config_accessor :assertion_consumer_service_url
     config_accessor :single_logout_service_url
@@ -57,7 +58,7 @@ module RackEntraIdAuth
     config_accessor :authn_context_comparison
     config_accessor :authn_context_decl_ref
 
-    # Ruby SAML workflow settings
+    # Ruby SAML workflow Settings
     config_accessor :security
     config_accessor :soft
 
