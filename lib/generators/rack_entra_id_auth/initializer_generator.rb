@@ -6,7 +6,7 @@ module RackEntraIdAuth
       source_root File.expand_path('templates', __dir__)
 
       def create_initializer
-        template 'initializer.rb', Rails.root.join('config', 'initializers', 'rack_entra_id_auth.rb')
+        template 'config_initializer.rb', Rails.root.join('config', 'initializers', 'rack_entra_id_auth.rb')
       end
     end
   end

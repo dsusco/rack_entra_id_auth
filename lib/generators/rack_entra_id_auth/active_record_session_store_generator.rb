@@ -3,17 +3,21 @@ require 'rails/generators/active_record'
 
 module RackEntraIdAuth
   module Generators
-    class SessionsMigrationGenerator < Rails::Generators::Base
+    class ActiveRecordSessionStoreGenerator < Rails::Generators::Base
       include Rails::Generators::Migration
 
       argument :file_name, :type => :string, :default => 'create_sessions'
 
-      desc 'Create a migration for Active Record Session Store with a sessionindex column.'
+      desc 'Create an initializer to use Active Record Session Store and a migration to create a sessions table with a sessionindex column.'
 
       source_root File.expand_path('templates', __dir__)
 
+      def create_initializer
+        template 'session_store_initializer.rb', Rails.root.join('config', 'initializers', 'session_store.rb')
+      end
+
       def create_sessions_migration
-        migration_template 'migration.rb', Rails.root.join('db', 'migrate', "#{file_name}.rb")
+        migration_template 'create_sessions_migration.rb', Rails.root.join('db', 'migrate', "#{file_name}.rb")
       end
 
       protected
