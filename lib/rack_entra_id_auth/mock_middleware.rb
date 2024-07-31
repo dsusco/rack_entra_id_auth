@@ -1,3 +1,5 @@
+require 'uri'
+
 require 'rack_entra_id_auth/entra_id_request'
 
 module RackEntraIdAuth
@@ -76,6 +78,17 @@ module RackEntraIdAuth
           [ "#{message}: #{url}" ] ]
       end
 
+      def log (env, message, level = :info)
+        env['rack.logger'] ||= Rails.logger if defined?(Rails.logger)
+        message = "rack_entra_id_auth: #{message}"
+
+        if env['rack.logger']
+          env['rack.logger'].send(level, message)
+        else
+          env['rack.errors'].write(message.concat("\n"))
+        end
+      end
+
       def login_page (action)
         options = RackEntraIdAuth.config.mock_attributes.keys.map { |key| %Q~<option value="#{key}">#{key}</option>~ } .join
 
@@ -101,17 +114,6 @@ module RackEntraIdAuth
   </body>
 </html>
         EOS
-      end
-
-      def log(env, message, level = :info)
-        env['rack.logger'] ||= Rails.logger if defined?(Rails.logger)
-        message = "rack_entra_id_auth: #{message}"
-
-        if env['rack.logger']
-          env['rack.logger'].send(level, message)
-        else
-          env['rack.errors'].write(message.concat("\n"))
-        end
       end
   end
 end

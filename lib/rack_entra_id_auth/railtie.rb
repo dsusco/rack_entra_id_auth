@@ -1,3 +1,5 @@
+require 'rack'
+
 module RackEntraIdAuth
   class Railtie < ::Rails::Railtie
     config.rack_entra_id_auth = RackEntraIdAuth.config

@@ -165,11 +165,11 @@ module RackEntraIdAuth
       def internal_server_error_response (content = 'Internal server error')
         [ 500,
           { 'content-type' => 'text/html',
-            'content-length' => content.length},
+            'content-length' => content.length },
             [ content ] ]
       end
 
-      def log(env, message, level = :info)
+      def log (env, message, level = :info)
         env['rack.logger'] ||= Rails.logger if defined?(Rails.logger)
         message = "rack_entra_id_auth: #{message}"
 

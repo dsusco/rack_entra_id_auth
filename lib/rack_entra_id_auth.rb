@@ -1,6 +1,3 @@
-require 'rack'
-require 'ruby-saml'
-
 require 'rack_entra_id_auth/configuration'
 
 module RackEntraIdAuth

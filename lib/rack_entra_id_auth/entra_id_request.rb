@@ -1,4 +1,4 @@
-require 'uri'
+require 'ruby-saml'
 
 module RackEntraIdAuth
   class EntraIdRequest
