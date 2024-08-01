@@ -1,4 +1,4 @@
-require 'active_support'
+require 'active_support/configurable'
 
 module RackEntraIdAuth
   class Configuration
@@ -8,9 +8,9 @@ module RackEntraIdAuth
     config_accessor :login_relay_state_url
     config_accessor :logout_path, default: '/logout'
     config_accessor :logout_relay_state_url
-    # mock_server must be set in `config/application.rb` or an
-    # environment-specific configuration file. I.e. it must happen before
-    # initializers as it's used in the initializer created in the Railtie.
+    # mock_server must be set in `config/application.rb` or an environment-
+    # specific configuration file. I.e. it must happen before initializers as
+    # it's used in the initializer created in the Railtie.
     config_accessor :mock_server, default: true
     config_accessor :mock_attributes, default: {}
     config_accessor :session_key, default: :entra_id

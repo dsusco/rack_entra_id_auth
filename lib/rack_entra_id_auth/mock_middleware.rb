@@ -33,7 +33,9 @@ module RackEntraIdAuth
 
         request.session[RackEntraIdAuth.config.session_key] = RackEntraIdAuth.config.session_value_proc.call(attributes)
 
-        return found_redirect_response(redirect_url, 'Initializing session and redirecting to relay state URL')
+        return found_redirect_response(
+                 redirect_url,
+                 'Initializing session and redirecting to relay state URL')
       end
 
       # mock a logout request
@@ -45,9 +47,11 @@ module RackEntraIdAuth
                        RackEntraIdAuth.config.logout_relay_state_url ||
                        entra_id_request.base_url
 
-        request.session.send (request.session.respond_to?(:destroy) ? :destroy : :clear)
+        request.session.send(request.session.respond_to?(:destroy) ? :destroy : :clear)
 
-        return found_redirect_response(redirect_url, 'Destroying session and redirecting to relay state URL')
+        return found_redirect_response(
+                 redirect_url,
+                 'Destroying session and redirecting to relay state URL')
       end
 
       response = @app.call(env)
@@ -71,7 +75,7 @@ module RackEntraIdAuth
 
     protected
 
-      def found_redirect_response (url, message = "Redirecting to URL")
+      def found_redirect_response (url, message = 'Redirecting to URL')
         [ 302,
           { 'location' => url,
             'content-type' => 'text/plain' },
