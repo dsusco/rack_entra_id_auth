@@ -1,13 +1,14 @@
 require_relative 'lib/rack_entra_id_auth/version'
 
 Gem::Specification.new do |s|
-  s.name        = 'rack_entra_id_auth'
-  s.version     = RackEntraIdAuth::VERSION
-  s.authors     = ['David Susco']
-  s.email       = ['dsusco@gmail.com']
-  s.homepage    = 'https://github.com/dsusco/rack_entra_id_auth'
+  s.name    = 'rack_entra_id_auth'
+  s.version = RackEntraIdAuth::VERSION
+  s.authors = ['David Susco']
+  s.email   = ['dsusco@gmail.com']
+
   s.summary     = 'Rails aware Rack middleware for Entra ID authentication.'
   s.description = s.summary
+  s.homepage    = 'https://github.com/dsusco/rack_entra_id_auth'
   s.license     = 'MIT'
 
   s.required_ruby_version = '>= 3.0.0'
@@ -23,12 +24,11 @@ Gem::Specification.new do |s|
     Dir['{lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   end
 
-  s.add_dependency 'activerecord-session_store', '~> 2.0'
   s.add_dependency 'activesupport', '~> 7.0'
   s.add_dependency 'rack', '~> 3.0'
-  s.add_dependency 'rake', '~> 13.0'
   s.add_dependency 'ruby-saml', '~> 1.10'
 
-  s.add_development_dependency 'minitest', '~> 5.14'
-  s.add_development_dependency 'rubocop', '~> 1.0'
+  s.add_development_dependency 'minitest', '~> 5.16'
+  s.add_development_dependency 'rake', '~> 13.0'
+  s.add_development_dependency 'rubocop', '~> 1.21'
 end
