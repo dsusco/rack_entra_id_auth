@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    rack_entra_id_auth (1.0.0)
+    rack_entra_id_auth (1.0.1)
       activesupport (~> 7.0)
-      rack (~> 3.0)
+      rack (~> 2.2)
       ruby-saml (~> 1.10)
 
 GEM
@@ -42,7 +42,7 @@ GEM
       ast (~> 2.4.1)
       racc
     racc (1.8.0)
-    rack (3.1.7)
+    rack (2.2.9)
     rainbow (3.1.1)
     rake (13.2.1)
     regexp_parser (2.9.2)
