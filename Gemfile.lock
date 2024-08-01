@@ -151,10 +151,10 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
-  minitest (~> 5.14)
+  minitest (~> 5.16)
   rack_entra_id_auth!
   rake (~> 13.0)
-  rubocop (~> 1.0)
+  rubocop (~> 1.21)
 
 BUNDLED WITH
    2.5.11
