@@ -29,7 +29,7 @@ module RackEntraIdAuth
         log(env, 'Destroying session…')
 
         # destroy session in case single logout fails
-        destroy_session()
+        destroy_session(request.session)
 
         relay_state_url = request.params['relay_state'] ||
                           RackEntraIdAuth.config.logout_relay_state_url ||
@@ -100,7 +100,7 @@ module RackEntraIdAuth
         log(env, 'Destroying session and sending logout response to Entra ID…')
 
         # destroy the session
-        destroy_session()
+        destroy_session(request.session)
 
         response_url = entra_id_request.slo_response_url(
           request_id: logout_request.id,
@@ -137,7 +137,7 @@ module RackEntraIdAuth
 
         # session should already be destroyed from SP initiated logout/single
         # logout request, but just to be safe…
-        destroy_session()
+        destroy_session(request.session)
 
         return found_redirect_response(
                  entra_id_request.relay_state_url,
@@ -160,8 +160,8 @@ module RackEntraIdAuth
 
     protected
 
-      def destroy_session ()
-        request.session.send(request.session.respond_to?(:destroy) ? :destroy : :clear)
+      def destroy_session (session)
+        session.send(session.respond_to?(:destroy) ? :destroy : :clear)
       end
 
       def found_redirect_response (url, message = 'Redirecting to URL')
