@@ -80,7 +80,7 @@ module RackEntraIdAuth
     # @return [String]
     #
     def relay_state_url
-      request.get_header('rack.request.form_hash')['RelayState'] || request.params['RelayState']
+      request.get_header('rack.request.form_hash')['RelayState'] rescue request.params['RelayState'] || base_url
     end
 
     # A single sign-on response for the SAMLResponse in the request's header.
