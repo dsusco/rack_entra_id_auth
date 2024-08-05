@@ -66,13 +66,13 @@ module RackEntraIdAuth
         if !auth_response.is_valid?
           log(env, "Invalid single login reponse from Entra ID: #{auth_response.errors.first}")
 
-          return internal_server_error_response("Invalid login reponse from Entra ID: #{auth_response.errors.first}")
+          return internal_server_error_response("Invalid single login reponse from Entra ID: #{auth_response.errors.first}")
         end
 
         if !auth_response.success?
           log(env, 'Unsuccessful single single reponse from Entra ID.')
 
-          return internal_server_error_response('Unsuccessful login reponse from Entra ID.')
+          return internal_server_error_response('Unsuccessful single login reponse from Entra ID.')
         end
 
         log(env, 'Initializing session and redirecting to relay state URL…')
@@ -94,7 +94,7 @@ module RackEntraIdAuth
         if !logout_request.is_valid?
           log(env, "Invalid single logout request from Entra ID: #{logout_request.errors.first}")
 
-          return internal_server_error_response("Invalid logout request from Entra ID: #{logout_request.errors.first}")
+          return internal_server_error_response("Invalid single logout request from Entra ID: #{logout_request.errors.first}")
         end
 
         log(env, 'Destroying session and sending logout response to Entra ID…')
@@ -124,13 +124,13 @@ module RackEntraIdAuth
         if !logout_response.validate
           log(env, "Invalid single logout reponse from Entra ID: #{logout_response.errors.first}")
 
-          return internal_server_error_response("Invalid logout reponse from Entra ID: #{logout_response.errors.first}")
+          return internal_server_error_response("Invalid single logout reponse from Entra ID: #{logout_response.errors.first}")
         end
 
         if !logout_response.success?
           log(env, 'Unsuccessful single logout reponse from Entra ID.')
 
-          return internal_server_error_response('Unsuccessful logout reponse from Entra ID.')
+          return internal_server_error_response('Unsuccessful single logout reponse from Entra ID.')
         end
 
         log(env, 'Destroying session and redirecting to relay state URL…')
