@@ -1,8 +1,48 @@
 require 'active_support/configurable'
+require 'ruby-saml'
 
 module RackEntraIdAuth
   class Configuration
     include ActiveSupport::Configurable
+
+    RUBY_SAML_SETTINGS = %i(
+      idp_entity_id
+      idp_sso_service_url
+      idp_slo_service_url
+      idp_slo_response_service_url
+      idp_cert
+      idp_cert_fingerprint
+      idp_cert_fingerprint_algorithm
+      idp_cert_multi
+      idp_attribute_names
+      idp_name_qualifier
+      valid_until
+      sp_entity_id
+      assertion_consumer_service_url
+      single_logout_service_url
+      sp_name_qualifier
+      name_identifier_format
+      name_identifier_value
+      name_identifier_value_requested
+      sessionindex
+      compress_request
+      compress_response
+      double_quote_xml_attribute_values
+      message_max_bytesize
+      passive
+      attributes_index
+      force_authn
+      certificate
+      private_key
+      sp_cert_multi
+      authn_context
+      authn_context_comparison
+      authn_context_decl_ref
+      security
+      soft
+    )
+
+    RUBY_SAML_SETTINGS.each { |ruby_saml_setting| config_accessor ruby_saml_setting }
 
     config_accessor :login_path, default: '/login'
     config_accessor :login_relay_state_url
@@ -24,57 +64,26 @@ module RackEntraIdAuth
     }
     config_accessor :skip_single_logout, default: true
 
-    # Ruby SAML ID Provider Settings
-    config_accessor :idp_entity_id
-    config_accessor :idp_sso_service_url
-    config_accessor :idp_slo_service_url
-    config_accessor :idp_slo_response_service_url
-    config_accessor :idp_cert
-    config_accessor :idp_cert_fingerprint
-    config_accessor :idp_cert_fingerprint_algorithm
-    config_accessor :idp_cert_multi
-    config_accessor :idp_attribute_names
-    config_accessor :idp_name_qualifier
-    config_accessor :valid_until
+    def metadata_url
+      @metadata_url
+    end
 
-    # Ruby SAML Service Provider Settings
-    config_accessor :sp_entity_id
-    config_accessor :assertion_consumer_service_url
-    config_accessor :single_logout_service_url
-    config_accessor :sp_name_qualifier
-    config_accessor :name_identifier_format
-    config_accessor :name_identifier_value
-    config_accessor :name_identifier_value_requested
-    config_accessor :sessionindex
-    config_accessor :compress_request
-    config_accessor :compress_response
-    config_accessor :double_quote_xml_attribute_values
-    config_accessor :message_max_bytesize
-    config_accessor :passive
-    config_accessor :attributes_index
-    config_accessor :force_authn
-    config_accessor :certificate
-    config_accessor :private_key
-    config_accessor :sp_cert_multi
-    config_accessor :authn_context
-    config_accessor :authn_context_comparison
-    config_accessor :authn_context_decl_ref
+    def metadata_url= (metadata_url)
+      @metadata_url = metadata_url
 
-    # Ruby SAML workflow Settings
-    config_accessor :security
-    config_accessor :soft
+      remote_hash = OneLogin::RubySaml::IdpMetadataParser.new.parse_remote_to_hash(metadata_url)
+
+      RUBY_SAML_SETTINGS.each do |ruby_saml_setting|
+        remote_value = remote_hash[ruby_saml_setting]
+
+        self.send("#{ruby_saml_setting}=", remote_value) unless remote_value.nil?
+      end
+
+      @metadata_url
+    end
 
     def ruby_saml_settings
-      config.to_h.except(
-        :login_path,
-        :login_relay_state_url,
-        :logout_path,
-        :logout_relay_state_url,
-        :mock_server,
-        :mock_attributes,
-        :session_key,
-        :session_value_proc,
-        :skip_single_logout)
+      config.to_h.slice(*RUBY_SAML_SETTINGS)
     end
   end
 end
