@@ -64,6 +64,12 @@ module RackEntraIdAuth
     }
     config_accessor :skip_single_logout, default: true
 
+    def configuration_options (configuration_options = {})
+      configuration_options.slice(:metadata_url, *RUBY_SAML_SETTINGS).each do |key, value|
+        self.send("#{key}=", value) unless value.nil?
+      end
+    end
+
     def metadata_url
       @metadata_url
     end
@@ -71,13 +77,10 @@ module RackEntraIdAuth
     def metadata_url= (metadata_url)
       @metadata_url = metadata_url
 
-      remote_hash = OneLogin::RubySaml::IdpMetadataParser.new.parse_remote_to_hash(metadata_url)
-
-      RUBY_SAML_SETTINGS.each do |ruby_saml_setting|
-        remote_value = remote_hash[ruby_saml_setting]
-
-        self.send("#{ruby_saml_setting}=", remote_value) unless remote_value.nil?
-      end
+      OneLogin::RubySaml::IdpMetadataParser.new.parse_remote_to_hash(metadata_url)
+        .slice(*RUBY_SAML_SETTINGS).each do |key, value|
+          self.send("#{key}=", value) unless value.nil?
+        end
 
       @metadata_url
     end
