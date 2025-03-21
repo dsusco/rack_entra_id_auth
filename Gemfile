@@ -1,4 +1,4 @@
-#ruby=3.3.4
+#ruby=3.3.6
 #ruby-gemset=rack_entra_id_auth
 source 'https://rubygems.org'
 
