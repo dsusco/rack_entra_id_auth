@@ -1,4 +1,5 @@
 require 'ruby-saml'
+require 'uri'
 
 module RackEntraIdAuth
   class EntraIdRequest
@@ -80,7 +81,10 @@ module RackEntraIdAuth
     # @return [String]
     #
     def relay_state_url
-      request.get_header('rack.request.form_hash')['RelayState'] rescue request.params['RelayState'] || base_url
+      relay_state = ''
+      relay_state = request.get_header('rack.request.form_hash')['RelayState'] if request.has_header?('rack.request.form_hash')
+      relay_state = request.params['RelayState'] if !relay_state.is_a?(String) or relay_state.empty?
+      relay_state =~ /\A#{URI::regexp(['http', 'https'])}\z/ ? relay_state : base_url
     end
 
     # A single sign-on response for the SAMLResponse in the request's header.
