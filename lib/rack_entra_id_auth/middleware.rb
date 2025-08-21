@@ -10,6 +10,8 @@ module RackEntraIdAuth
       request = Rack::Request.new(env)
       entra_id_request = EntraIdRequest.new(request)
 
+      return @app.call(env) if entra_id_request.excluded_path?
+
       # SP initiated single sign-on request
       if entra_id_request.login?
         log(env, 'Redirecting login request to Entra ID single sign-on URL…')

@@ -18,6 +18,23 @@ module RackEntraIdAuth
       "#{request.base_url}#{request.path}".sub(Regexp.new("#{request.path_info}$"), '')
     end
 
+    # Returns whether the request should be ignored by the middleware. Returns
+    # true if the request's path matches any of the strings or regular
+    # expressions in the exclude_paths config, otherwise returns false.
+    #
+    # @return [Bool]
+    #
+    def excluded_path?
+      RackEntraIdAuth.config.exclude_paths.any? do |regexp_or_string|
+        case regexp_or_string
+          when Regexp
+            regexp_or_string.match?(request.path_info)
+          when String
+            regexp_or_string.eql?(request.path_info)
+        end
+      end
+    end
+
     # Returns whether the request is a Service Provider initiated sign-on
     # request. Returns true if the request's path info equals the login path
     # configuration (login_path), otherwise returns false.

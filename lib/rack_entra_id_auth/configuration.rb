@@ -44,6 +44,7 @@ module RackEntraIdAuth
 
     RUBY_SAML_SETTINGS.each { |ruby_saml_setting| config_accessor ruby_saml_setting }
 
+    config_accessor :exclude_paths, default: []
     config_accessor :login_path, default: '/login'
     config_accessor :login_relay_state_url
     config_accessor :logout_path, default: '/logout'

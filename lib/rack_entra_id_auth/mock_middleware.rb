@@ -12,6 +12,8 @@ module RackEntraIdAuth
       request = Rack::Request.new(env)
       entra_id_request = EntraIdRequest.new(request)
 
+      return @app.call(env) if entra_id_request.excluded_path?
+
       # mock a login page
       if entra_id_request.login? and request.request_method.eql?('GET')
         log(env, 'Rendering mock login page…')
