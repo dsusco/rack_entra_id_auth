@@ -87,7 +87,7 @@ module RackEntraIdAuth
     end
 
     def ruby_saml_settings
-      config.to_h.slice(*RUBY_SAML_SETTINGS)
+      config.to_h.slice(*RUBY_SAML_SETTINGS).compact
     end
   end
 end
