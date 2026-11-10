@@ -17,7 +17,8 @@ Gem::Specification.new do |s|
     'bug_tracker_uri' => "#{s.homepage}/issues",
     'changelog_uri' => "#{s.homepage}/releases/tag/v#{s.version}",
     'homepage_uri' => s.homepage,
-    'source_code_uri' => s.homepage
+    'source_code_uri' => s.homepage,
+    'rubygems_mfa_required' => 'true'
   }
 
   s.files = Dir.chdir(File.expand_path(__dir__)) do
