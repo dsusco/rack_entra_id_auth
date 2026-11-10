@@ -3,8 +3,6 @@ require 'ruby-saml'
 
 module RackEntraIdAuth
   class Configuration
-    include ActiveSupport::Configurable
-
     RUBY_SAML_SETTINGS = %i(
       idp_entity_id
       idp_sso_service_url
@@ -42,37 +40,38 @@ module RackEntraIdAuth
       soft
     )
 
-    RUBY_SAML_SETTINGS.each { |ruby_saml_setting| config_accessor ruby_saml_setting }
+    DEFAULTS = {
+      exclude_paths: [],
+      login_path: '/login',
+      logout_path: '/logout',
+      # mock_server must be set in `config/application.rb` or an environment-
+      # specific configuration file. I.e. it must happen before initializers as
+      # it's used in the initializer created in the Railtie.
+      mock_server: true,
+      mock_attributes: {},
+      session_key: :entra_id,
+      session_value_proc: Proc.new { |attributes|
+        attributes.inject({}) do |memo, (key, value)|
+          key = key.split('/').last
+          value = value.first if value.kind_of?(Array) and value.length.eql?(1) and !key.eql?('groups')
+          memo[key] = value
+          memo
+        end
+      },
+      skip_single_logout: true,
+    }.freeze
 
-    config_accessor :exclude_paths, default: []
-    config_accessor :login_path, default: '/login'
-    config_accessor :login_relay_state_url
-    config_accessor :logout_path, default: '/logout'
-    config_accessor :logout_relay_state_url
-    # mock_server must be set in `config/application.rb` or an environment-
-    # specific configuration file. I.e. it must happen before initializers as
-    # it's used in the initializer created in the Railtie.
-    config_accessor :mock_server, default: true
-    config_accessor :mock_attributes, default: {}
-    config_accessor :session_key, default: :entra_id
-    config_accessor :session_value_proc, default: Proc.new { |attributes|
-      attributes.inject({}) do |memo, (key, value)|
-        key = key.split('/').last
-        value = value.first if value.kind_of?(Array) and value.length.eql?(1) and !key.eql?('groups')
-        memo[key] = value
-        memo
-      end
-    }
-    config_accessor :skip_single_logout, default: true
+    attr_accessor(*RUBY_SAML_SETTINGS, *DEFAULTS.keys, :login_relay_state_url, :logout_relay_state_url)
+    attr_reader :metadata_url
+
+    def initialize
+      DEFAULTS.each { |key, value| public_send("#{key}=", value.dup) }
+    end
 
     def configuration_options (configuration_options = {})
       configuration_options.slice(:metadata_url, *RUBY_SAML_SETTINGS).each do |key, value|
         self.send("#{key}=", value) unless value.nil?
       end
-    end
-
-    def metadata_url
-      @metadata_url
     end
 
     def metadata_url= (metadata_url)
@@ -87,7 +86,7 @@ module RackEntraIdAuth
     end
 
     def ruby_saml_settings
-      config.to_h.slice(*RUBY_SAML_SETTINGS).compact
+      RUBY_SAML_SETTINGS.to_h { |key| [key, public_send(key)] }.compact
     end
   end
 end

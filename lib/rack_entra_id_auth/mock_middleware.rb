@@ -19,7 +19,7 @@ module RackEntraIdAuth
         log(env, 'Rendering mock login page…')
 
         return [ 200,
-                 { 'Content-Type' => 'text/html' },
+                 { 'content-type' => 'text/html' },
                  [ login_page(request.url) ] ]
       end
 

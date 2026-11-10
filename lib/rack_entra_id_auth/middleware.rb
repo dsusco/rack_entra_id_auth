@@ -176,7 +176,7 @@ module RackEntraIdAuth
       def internal_server_error_response (content = 'Internal server error')
         [ 500,
           { 'content-type' => 'text/html',
-            'content-length' => content.length },
+            'content-length' => content.bytesize.to_s },
             [ content ] ]
       end
 

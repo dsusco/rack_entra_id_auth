@@ -24,11 +24,7 @@ Gem::Specification.new do |s|
     Dir['{lib}/**/*', 'MIT-LICENSE', 'Rakefile', 'README.md']
   end
 
-  s.add_dependency 'activesupport', '~> 8.0'
+  s.add_dependency 'activesupport', '>= 7.2', '< 9'
   s.add_dependency 'rack', '~> 3.2'
   s.add_dependency 'ruby-saml', '~> 1.18'
-
-  s.add_development_dependency 'minitest', '~> 6.1'
-  s.add_development_dependency 'rake', '~> 13.4'
-  s.add_development_dependency 'rubocop', '~> 1.92'
 end
