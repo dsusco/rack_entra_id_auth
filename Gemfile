@@ -1,4 +1,4 @@
-#ruby=3.4.7
+#ruby=4.0.9
 #ruby-gemset=rack_entra_id_auth
 source 'https://rubygems.org'
 
@@ -6,6 +6,6 @@ git_source(:github) { |repo| 'https://github.com/#{repo}.git' }
 
 gemspec
 
-gem 'minitest', '~> 5.16'
-gem 'rake', '~> 13.0'
-gem 'rubocop', '~> 1.21'
+gem 'minitest', '~> 6.1'
+gem 'rake', '~> 13.4'
+gem 'rubocop', '~> 1.92'

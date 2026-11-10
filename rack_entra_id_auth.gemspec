@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/dsusco/rack_entra_id_auth'
   s.license     = 'MIT'
 
-  s.required_ruby_version = '>= 3.0.0'
+  s.required_ruby_version = '>= 4.0.0'
 
   s.metadata = {
     'bug_tracker_uri'   => "#{s.homepage}/issues",
@@ -25,10 +25,10 @@ Gem::Specification.new do |s|
   end
 
   s.add_dependency 'activesupport', '~> 8.0'
-  s.add_dependency 'rack', '~> 3.0'
-  s.add_dependency 'ruby-saml', '~> 1.10'
+  s.add_dependency 'rack', '~> 3.2'
+  s.add_dependency 'ruby-saml', '~> 1.18'
 
-  s.add_development_dependency 'minitest', '~> 5.16'
-  s.add_development_dependency 'rake', '~> 13.0'
-  s.add_development_dependency 'rubocop', '~> 1.21'
+  s.add_development_dependency 'minitest', '~> 6.1'
+  s.add_development_dependency 'rake', '~> 13.4'
+  s.add_development_dependency 'rubocop', '~> 1.92'
 end
