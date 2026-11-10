@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = 'https://github.com/dsusco/rack_entra_id_auth'
   s.license     = 'MIT'
 
-  s.required_ruby_version = '>= 4.0.0'
+  s.required_ruby_version = '>= 3.2.0'
 
   s.metadata = {
     'bug_tracker_uri'   => "#{s.homepage}/issues",

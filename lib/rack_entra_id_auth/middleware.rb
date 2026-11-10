@@ -17,7 +17,7 @@ module RackEntraIdAuth
         log(env, 'Redirecting login request to Entra ID single sign-on URL…')
 
         sso_url = entra_id_request.sso_url(
-          { :RelayState => request.params['relay_state'] ||
+          { :RelayState => entra_id_request.safe_redirect_url(request.params['relay_state']) ||
                            RackEntraIdAuth.config.login_relay_state_url ||
                            entra_id_request.base_url })
 
@@ -33,7 +33,7 @@ module RackEntraIdAuth
         # destroy session in case single logout fails
         destroy_session(request.session)
 
-        relay_state_url = request.params['relay_state'] ||
+        relay_state_url = entra_id_request.safe_redirect_url(request.params['relay_state']) ||
                           RackEntraIdAuth.config.logout_relay_state_url ||
                           entra_id_request.base_url
 

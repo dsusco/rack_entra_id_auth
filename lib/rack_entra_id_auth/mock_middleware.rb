@@ -28,8 +28,8 @@ module RackEntraIdAuth
         log(env, 'Initializing session and redirecting to relay state URL…')
 
         attributes = RackEntraIdAuth.config.mock_attributes[request.params['username']] || {}
-        redirect_url = request.params['relay_state'] ||
-                       request.params['RelayState'] ||
+        redirect_url = entra_id_request.safe_redirect_url(request.params['relay_state']) ||
+                       entra_id_request.safe_redirect_url(request.params['RelayState']) ||
                        RackEntraIdAuth.config.login_relay_state_url ||
                        entra_id_request.base_url
 
@@ -44,8 +44,8 @@ module RackEntraIdAuth
       if entra_id_request.logout?
         log(env, 'Destroying session and redirecting to relay state URL…')
 
-        redirect_url = request.params['relay_state'] ||
-                       request.params['RelayState'] ||
+        redirect_url = entra_id_request.safe_redirect_url(request.params['relay_state']) ||
+                       entra_id_request.safe_redirect_url(request.params['RelayState']) ||
                        RackEntraIdAuth.config.logout_relay_state_url ||
                        entra_id_request.base_url
 
@@ -62,10 +62,8 @@ module RackEntraIdAuth
       if response[0] == 401
         log(env, 'Intercepted 401 Unauthorized response, redirecting to mock login URL…')
 
-        login_url = URI::HTTP.build(host: request.host,
-                                    port: request.port,
-                                    path: RackEntraIdAuth.config.login_path,
-                                    query: URI.encode_www_form({ :RelayState => request.url }))
+        login_url = "#{request.base_url}#{RackEntraIdAuth.config.login_path}?" +
+                    URI.encode_www_form(RelayState: request.url)
 
         return found_redirect_response(
                  login_url,

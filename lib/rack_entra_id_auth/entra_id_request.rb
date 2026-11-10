@@ -1,3 +1,5 @@
+require 'uri'
+require 'active_support/core_ext/object/blank'
 require 'ruby-saml'
 
 module RackEntraIdAuth
@@ -97,7 +99,22 @@ module RackEntraIdAuth
     # @return [String]
     #
     def relay_state_url
-      request.get_header('rack.request.form_hash')['RelayState'] rescue request.params['RelayState'] || base_url
+      safe_redirect_url(request.POST['RelayState'].presence || request.GET['RelayState']) || base_url
+    end
+
+    # Returns the URL if it's an http(s) URL on the same host as the request,
+    # otherwise returns nil. Used to keep relay state redirects on-site.
+    #
+    # @param url [String]
+    #
+    # @return [String|nil]
+    #
+    def safe_redirect_url (url)
+      uri = URI.parse(url.to_s)
+
+      url if uri.is_a?(URI::HTTP) and uri.host.eql?(request.host)
+    rescue URI::InvalidURIError
+      nil
     end
 
     # A single sign-on response for the SAMLResponse in the request's header.

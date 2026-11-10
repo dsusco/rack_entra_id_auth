@@ -1,3 +1,4 @@
+require 'rack_entra_id_auth/version'
 require 'rack_entra_id_auth/configuration'
 
 module RackEntraIdAuth
