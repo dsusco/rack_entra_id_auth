@@ -14,10 +14,10 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '>= 3.2.0'
 
   s.metadata = {
-    'bug_tracker_uri'   => "#{s.homepage}/issues",
-    'changelog_uri'     => "#{s.homepage}/releases/tag/v#{s.version}",
-    'homepage_uri'      => s.homepage,
-    'source_code_uri'   => s.homepage
+    'bug_tracker_uri' => "#{s.homepage}/issues",
+    'changelog_uri' => "#{s.homepage}/releases/tag/v#{s.version}",
+    'homepage_uri' => s.homepage,
+    'source_code_uri' => s.homepage
   }
 
   s.files = Dir.chdir(File.expand_path(__dir__)) do

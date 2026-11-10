@@ -3,7 +3,7 @@ require 'ruby-saml'
 
 module RackEntraIdAuth
   class Configuration
-    RUBY_SAML_SETTINGS = %i(
+    RUBY_SAML_SETTINGS = %i[
       idp_entity_id
       idp_sso_service_url
       idp_slo_service_url
@@ -38,7 +38,7 @@ module RackEntraIdAuth
       authn_context_decl_ref
       security
       soft
-    )
+    ].freeze
 
     DEFAULTS = {
       exclude_paths: [],
@@ -50,15 +50,14 @@ module RackEntraIdAuth
       mock_server: true,
       mock_attributes: {},
       session_key: :entra_id,
-      session_value_proc: Proc.new { |attributes|
-        attributes.inject({}) do |memo, (key, value)|
+      session_value_proc: proc do |attributes|
+        attributes.each_with_object({}) do |(key, value), memo|
           key = key.split('/').last
-          value = value.first if value.kind_of?(Array) and value.length.eql?(1) and !key.eql?('groups')
+          value = value.first if value.is_a?(Array) and value.length.eql?(1) and !key.eql?('groups')
           memo[key] = value
-          memo
         end
-      },
-      skip_single_logout: true,
+      end,
+      skip_single_logout: true
     }.freeze
 
     attr_accessor(*RUBY_SAML_SETTINGS, *DEFAULTS.keys, :login_relay_state_url, :logout_relay_state_url)
@@ -70,7 +69,7 @@ module RackEntraIdAuth
 
     def configuration_options (configuration_options = {})
       configuration_options.slice(:metadata_url, *RUBY_SAML_SETTINGS).each do |key, value|
-        self.send("#{key}=", value) unless value.nil?
+        send("#{key}=", value) unless value.nil?
       end
     end
 
@@ -80,7 +79,7 @@ module RackEntraIdAuth
       idp_settings = OneLogin::RubySaml::IdpMetadataParser.new.parse_remote_to_hash(metadata_url)
 
       idp_settings.slice(*RUBY_SAML_SETTINGS).each do |key, value|
-        self.send("#{key}=", value) unless value.nil?
+        send("#{key}=", value) unless value.nil?
       end
     end
 

@@ -66,7 +66,7 @@ class TestEntraIdRequest < Minitest::Test
     assert entra_id_request("#{SLO_SERVICE_URL}?SAMLRequest=abc").logout_request?
     refute entra_id_request("#{SLO_SERVICE_URL}?SAMLResponse=abc").logout_request?
     assert entra_id_request("#{SLO_SERVICE_URL}?SAMLResponse=abc").logout_response?
-    refute entra_id_request("https://app.example.com/other?SAMLResponse=abc").logout_response?
+    refute entra_id_request('https://app.example.com/other?SAMLResponse=abc').logout_response?
   end
 
   # --- relay state -----------------------------------------------------------

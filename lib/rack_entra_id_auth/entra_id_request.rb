@@ -144,13 +144,13 @@ module RackEntraIdAuth
                             skip_audience: false)
       response = OneLogin::RubySaml::Response.new(
         saml_response,
-        { :settings => @saml_settings,
-          :matches_request_id => auth_request_id,
-          :skip_conditions => skip_conditions,
-          :allowed_clock_drift => allowed_clock_drift,
-          :skip_subject_confirmation => skip_subject_confirmation,
-          :skip_recipient_check => skip_recipient_check,
-          :skip_audience => skip_audience })
+        { settings: @saml_settings,
+          matches_request_id: auth_request_id,
+          skip_conditions: skip_conditions,
+          allowed_clock_drift: allowed_clock_drift,
+          skip_subject_confirmation: skip_subject_confirmation,
+          skip_recipient_check: skip_recipient_check,
+          skip_audience: skip_audience })
 
       # the auth request's ID is no longer needed
       request.session.delete(:auth_request_id)
@@ -174,9 +174,9 @@ module RackEntraIdAuth
     def saml_logout_request (allowed_clock_drift: nil, relax_signature_validation: false)
       OneLogin::RubySaml::SloLogoutrequest.new(
         request.params['SAMLRequest'],
-        { :settings => @saml_settings,
-          :allowed_clock_drift => allowed_clock_drift,
-          :relax_signature_validation => relax_signature_validation })
+        { settings: @saml_settings,
+          allowed_clock_drift: allowed_clock_drift,
+          relax_signature_validation: relax_signature_validation })
     end
 
     # A single logout response for the SAMLResponse in the request's query
@@ -197,9 +197,9 @@ module RackEntraIdAuth
       logout_response = OneLogin::RubySaml::Logoutresponse.new(
         request.params['SAMLResponse'],
         @saml_settings,
-        { :get_params => request.params,
-          :matches_request_id => logout_request_id,
-          :relax_signature_validation => relax_signature_validation })
+        { get_params: request.params,
+          matches_request_id: logout_request_id,
+          relax_signature_validation: relax_signature_validation })
 
       # the logout request's ID is no longer needed
       request.session.delete(:logout_request_id)
@@ -244,13 +244,13 @@ module RackEntraIdAuth
     def slo_url (params = {})
       logout_request = OneLogin::RubySaml::Logoutrequest.new
 
-      if @saml_settings.idp_slo_service_url.present?
-        # store the logout request's uuid to validate it in the response
-        request.session[:logout_request_id] = logout_request.uuid
+      return unless @saml_settings.idp_slo_service_url.present?
 
-        # return nil if no single logout url is set
-        logout_request.create(@saml_settings, params)
-      end
+      # store the logout request's uuid to validate it in the response
+      request.session[:logout_request_id] = logout_request.uuid
+
+      # return nil if no single logout url is set
+      logout_request.create(@saml_settings, params)
     end
 
     # Returns a single sign-on authentication request URL for the settings

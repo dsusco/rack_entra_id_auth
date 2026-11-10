@@ -94,29 +94,29 @@ module RackEntraIdAuth
       end
 
       def login_page (action)
-        options = RackEntraIdAuth.config.mock_attributes.keys.map { |key| %Q~<option value="#{key}">#{key}</option>~ } .join
+        options = RackEntraIdAuth.config.mock_attributes.keys.map { |key| %(<option value="#{key}">#{key}</option>) }.join
 
-        <<-HTML
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Mock Middleware Login</title>
-  </head>
+        <<~HTML
+          <!DOCTYPE html>
+          <html>
+            <head>
+              <meta charset="utf-8">
+              <title>Mock Middleware Login</title>
+            </head>
 
-  <body>
-    <form action="#{action}" method="post">
-      <label for="username">Username</label>
+            <body>
+              <form action="#{action}" method="post">
+                <label for="username">Username</label>
 
-      <select id="username" name="username">
-        <option label="No User" value=""></option>
-        #{options}
-      </select>
+                <select id="username" name="username">
+                  <option label="No User" value=""></option>
+                  #{options}
+                </select>
 
-      <input type="submit" value="Login">
-    </form>
-  </body>
-</html>
+                <input type="submit" value="Login">
+              </form>
+            </body>
+          </html>
         HTML
       end
   end

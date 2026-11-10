@@ -94,8 +94,8 @@ RackEntraIdAuth.configure do |config|
   # requests and should be set below as well.
 
   # config.idp_entity_id                  = ''
-  config.idp_sso_service_url            = "IdP SINGLE SIGN-ON SERVICE URL"
-  config.idp_slo_service_url            = "IdP SINGLE LOGOUT SERVICE URL"
+  config.idp_sso_service_url            = 'IdP SINGLE SIGN-ON SERVICE URL'
+  config.idp_slo_service_url            = 'IdP SINGLE LOGOUT SERVICE URL'
   # config.idp_slo_response_service_url   = ''
   config.idp_cert                       = 'IdP X509CERTIFICATE'
   # config.idp_cert_fingerprint           = ''

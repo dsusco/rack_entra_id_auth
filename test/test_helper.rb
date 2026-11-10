@@ -17,10 +17,10 @@ require 'minitest/autorun'
 OneLogin::RubySaml::Logging.logger = Logger.new(nil)
 
 module RackEntraIdAuthTestHelpers
-  IDP_SSO_URL    = 'https://idp.example.com/saml2'
-  IDP_SLO_URL    = 'https://idp.example.com/saml2/logout'
-  ACS_URL        = 'https://app.example.com/saml/login'
-  SLO_SERVICE_URL = 'https://app.example.com/saml/logout'
+  IDP_SSO_URL    = 'https://idp.example.com/saml2'.freeze
+  IDP_SLO_URL    = 'https://idp.example.com/saml2/logout'.freeze
+  ACS_URL        = 'https://app.example.com/saml/login'.freeze
+  SLO_SERVICE_URL = 'https://app.example.com/saml/logout'.freeze
 
   def setup
     super
@@ -51,12 +51,12 @@ module RackEntraIdAuthTestHelpers
     }.merge(options))
   end
 
-  def rack_request (url, **options)
-    Rack::Request.new(env_for(url, **options))
+  def rack_request (url, **)
+    Rack::Request.new(env_for(url, **))
   end
 
-  def entra_id_request (url, **options)
-    RackEntraIdAuth::EntraIdRequest.new(rack_request(url, **options))
+  def entra_id_request (url, **)
+    RackEntraIdAuth::EntraIdRequest.new(rack_request(url, **))
   end
 
   # POST with a form-encoded body.

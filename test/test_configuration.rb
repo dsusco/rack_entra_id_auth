@@ -90,13 +90,13 @@ class TestConfiguration < Minitest::Test
       'http://schemas.microsoft.com/identity/claims/displayname' => ['Bobby Tables'],
       'http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress' => ['rtables@example.com'],
       'http://schemas.microsoft.com/ws/2008/06/identity/claims/groups' => ['Students'],
-      'roles' => ['a', 'b']
+      'roles' => %w[a b]
     }
 
     assert_equal({ 'displayname'  => 'Bobby Tables',
                    'emailaddress' => 'rtables@example.com',
                    'groups'       => ['Students'],
-                   'roles'        => ['a', 'b'] },
+                   'roles'        => %w[a b] },
                  config.session_value_proc.call(attributes))
   end
 end

@@ -17,7 +17,7 @@ module RackEntraIdAuth
         log(env, 'Redirecting login request to Entra ID single sign-on URL…')
 
         sso_url = entra_id_request.sso_url(
-          { :RelayState => entra_id_request.safe_redirect_url(request.params['relay_state']) ||
+          { RelayState: entra_id_request.safe_redirect_url(request.params['relay_state']) ||
                            RackEntraIdAuth.config.login_relay_state_url ||
                            entra_id_request.base_url })
 
@@ -37,7 +37,7 @@ module RackEntraIdAuth
                           RackEntraIdAuth.config.logout_relay_state_url ||
                           entra_id_request.base_url
 
-        slo_url = entra_id_request.slo_url({ :RelayState => relay_state_url })
+        slo_url = entra_id_request.slo_url({ RelayState: relay_state_url })
 
         if request.params['skip_single_logout'].blank? and
            !RackEntraIdAuth.config.skip_single_logout and
@@ -63,15 +63,15 @@ module RackEntraIdAuth
       if entra_id_request.login_response?
         log(env, 'Received single login response…')
 
-        auth_response = entra_id_request.saml_auth_response()
+        auth_response = entra_id_request.saml_auth_response
 
-        if !auth_response.is_valid?
+        unless auth_response.is_valid?
           log(env, "Invalid single login reponse from Entra ID: #{auth_response.errors.first}")
 
           return internal_server_error_response("Invalid single login reponse from Entra ID: #{auth_response.errors.first}")
         end
 
-        if !auth_response.success?
+        unless auth_response.success?
           log(env, 'Unsuccessful single single reponse from Entra ID.')
 
           return internal_server_error_response('Unsuccessful single login reponse from Entra ID.')
@@ -91,9 +91,9 @@ module RackEntraIdAuth
       if entra_id_request.logout_request? and !RackEntraIdAuth.config.skip_single_logout
         log(env, 'Received single logout request…')
 
-        logout_request = entra_id_request.saml_logout_request()
+        logout_request = entra_id_request.saml_logout_request
 
-        if !logout_request.is_valid?
+        unless logout_request.is_valid?
           log(env, "Invalid single logout request from Entra ID: #{logout_request.errors.first}")
 
           return internal_server_error_response("Invalid single logout request from Entra ID: #{logout_request.errors.first}")
@@ -108,7 +108,7 @@ module RackEntraIdAuth
           request_id: logout_request.id,
           logout_message: nil,
           params: {
-            :RelayState => entra_id_request.relay_state_url
+            RelayState: entra_id_request.relay_state_url
           },
           logout_status_code: nil)
 
@@ -121,15 +121,15 @@ module RackEntraIdAuth
       if entra_id_request.logout_response?
         log(env, 'Received single logout response…')
 
-        logout_response = entra_id_request.saml_logout_response()
+        logout_response = entra_id_request.saml_logout_response
 
-        if !logout_response.validate
+        unless logout_response.validate
           log(env, "Invalid single logout reponse from Entra ID: #{logout_response.errors.first}")
 
           return internal_server_error_response("Invalid single logout reponse from Entra ID: #{logout_response.errors.first}")
         end
 
-        if !logout_response.success?
+        unless logout_response.success?
           log(env, 'Unsuccessful single logout reponse from Entra ID.')
 
           return internal_server_error_response('Unsuccessful single logout reponse from Entra ID.')
@@ -153,7 +153,7 @@ module RackEntraIdAuth
         log(env, 'Intercepted 401 Unauthorized response, redirecting to Entra ID single sign-on URL…')
 
         return found_redirect_response(
-                 entra_id_request.sso_url(:RelayState => request.url),
+                 entra_id_request.sso_url(RelayState: request.url),
                  'Intercepted 401 Unauthorized response, redirecting to Entra ID single sign-on URL')
       end
 
@@ -177,7 +177,7 @@ module RackEntraIdAuth
         [ 500,
           { 'content-type' => 'text/html',
             'content-length' => content.bytesize.to_s },
-            [ content ] ]
+          [ content ] ]
       end
 
       def log (env, message, level = :info)
