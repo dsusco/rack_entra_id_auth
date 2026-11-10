@@ -80,7 +80,7 @@ class TestEntraIdRequest < Minitest::Test
   end
 
   def test_relay_state_url_from_query_string
-    url = "#{SLO_SERVICE_URL}?RelayState=#{CGI.escape('https://app.example.com/bye')}"
+    url = "#{SLO_SERVICE_URL}?RelayState=#{URI.encode_www_form_component('https://app.example.com/bye')}"
 
     assert_equal 'https://app.example.com/bye', entra_id_request(url).relay_state_url
   end
@@ -103,7 +103,7 @@ class TestEntraIdRequest < Minitest::Test
   end
 
   def test_relay_state_url_rejects_non_http_urls
-    url = "#{SLO_SERVICE_URL}?RelayState=#{CGI.escape('javascript:alert(1)')}"
+    url = "#{SLO_SERVICE_URL}?RelayState=#{URI.encode_www_form_component('javascript:alert(1)')}"
 
     assert_equal 'https://app.example.com', entra_id_request(url).relay_state_url
   end

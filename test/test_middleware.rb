@@ -36,7 +36,7 @@ class TestMiddleware < Minitest::Test
   end
 
   def test_login_ignores_off_site_relay_state_param
-    url = "https://app.example.com/login?relay_state=#{CGI.escape('https://evil.example.net/')}"
+    url = "https://app.example.com/login?relay_state=#{URI.encode_www_form_component('https://evil.example.net/')}"
 
     _status, headers, _body = call(env_for(url))
 
