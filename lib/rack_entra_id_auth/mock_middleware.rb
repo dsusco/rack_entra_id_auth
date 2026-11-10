@@ -96,7 +96,7 @@ module RackEntraIdAuth
       def login_page (action)
         options = RackEntraIdAuth.config.mock_attributes.keys.map { |key| %Q~<option value="#{key}">#{key}</option>~ } .join
 
-        <<-EOS
+        <<-HTML
 <!DOCTYPE html>
 <html>
   <head>
@@ -117,7 +117,7 @@ module RackEntraIdAuth
     </form>
   </body>
 </html>
-        EOS
+        HTML
       end
   end
 end

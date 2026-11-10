@@ -77,12 +77,11 @@ module RackEntraIdAuth
     def metadata_url= (metadata_url)
       @metadata_url = metadata_url
 
-      OneLogin::RubySaml::IdpMetadataParser.new.parse_remote_to_hash(metadata_url)
-        .slice(*RUBY_SAML_SETTINGS).each do |key, value|
-          self.send("#{key}=", value) unless value.nil?
-        end
+      idp_settings = OneLogin::RubySaml::IdpMetadataParser.new.parse_remote_to_hash(metadata_url)
 
-      @metadata_url
+      idp_settings.slice(*RUBY_SAML_SETTINGS).each do |key, value|
+        self.send("#{key}=", value) unless value.nil?
+      end
     end
 
     def ruby_saml_settings

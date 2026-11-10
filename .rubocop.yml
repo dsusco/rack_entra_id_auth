@@ -1,8 +1,107 @@
 AllCops:
   TargetRubyVersion: 3.2
+  NewCops: enable
+  SuggestExtensions: false
+
+# --- house style -------------------------------------------------------------
 
 Style/StringLiterals:
   EnforcedStyle: single_quotes
 
 Style/StringLiteralsInInterpolation:
   EnforcedStyle: single_quotes
+
+# `def call (env)`
+Layout/SpaceAfterMethodName:
+  Enabled: false
+
+# private/protected methods are indented one level under the keyword
+Layout/IndentationConsistency:
+  EnforcedStyle: indented_internal_methods
+
+# `when` is indented under `case`
+Layout/CaseIndentation:
+  IndentOneStep: true
+
+# `if a and b`
+Style/AndOr:
+  Enabled: false
+
+# `[ 302, headers, [ body ] ]` and closing parens on the last argument's line
+Layout/SpaceInsideArrayLiteralBrackets:
+  Enabled: false
+
+Layout/MultilineMethodCallBraceLayout:
+  Enabled: false
+
+Layout/FirstArgumentIndentation:
+  Enabled: false
+
+# aligned `=>` in multi-line hashes
+Layout/HashAlignment:
+  EnforcedHashRocketStyle: [key, table]
+  EnforcedColonStyle: [key, table]
+
+# `session: session` and `session:` are both fine
+Style/HashSyntax:
+  EnforcedShorthandSyntax: either
+
+# RVM reads the `#ruby=` and `#ruby-gemset=` comments in the Gemfile, and
+# adding a space after the # would break that
+Layout/LeadingCommentSpace:
+  AllowGemfileRubyComment: true
+
+Layout/LineLength:
+  Max: 140
+
+# --- off for now -------------------------------------------------------------
+
+Style/Documentation:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+# The two middleware `call` methods are long, flat sequences of request-type
+# checks. Splitting them up is a refactor for another day.
+Metrics/AbcSize:
+  Exclude:
+    - lib/rack_entra_id_auth/middleware.rb
+    - lib/rack_entra_id_auth/mock_middleware.rb
+    - test/**/*
+
+Metrics/CyclomaticComplexity:
+  Exclude:
+    - lib/rack_entra_id_auth/middleware.rb
+    - lib/rack_entra_id_auth/mock_middleware.rb
+
+Metrics/PerceivedComplexity:
+  Exclude:
+    - lib/rack_entra_id_auth/middleware.rb
+    - lib/rack_entra_id_auth/mock_middleware.rb
+
+Metrics/MethodLength:
+  CountAsOne: [array, hash, heredoc, method_call]
+  Exclude:
+    - lib/rack_entra_id_auth/middleware.rb
+    - lib/rack_entra_id_auth/mock_middleware.rb
+    - test/**/*
+
+Metrics/ClassLength:
+  Exclude:
+    - lib/rack_entra_id_auth/middleware.rb
+
+# mirrors ruby-saml's own keyword options
+Metrics/ParameterLists:
+  CountKeywordArgs: false
+
+# --- tests -------------------------------------------------------------------
+
+# `class Minitest::Test` reopens the class to mix in the helpers
+Style/ClassAndModuleChildren:
+  Exclude:
+    - test/test_helper.rb
+
+# test names like `test_invalid_login_response_returns_500`
+Naming/VariableNumber:
+  CheckMethodNames: false

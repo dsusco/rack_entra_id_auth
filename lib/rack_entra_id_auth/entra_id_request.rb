@@ -136,7 +136,12 @@ module RackEntraIdAuth
     # @return [OneLogin::RubySaml::Response] A single sign-on response for a
     #         Service Provideer initiated single sign-on request.
     #
-    def saml_auth_response (auth_request_id: request.session[:auth_request_id], skip_conditions: false, allowed_clock_drift: nil, skip_subject_confirmation: false, skip_recipient_check: false, skip_audience: false)
+    def saml_auth_response (auth_request_id: request.session[:auth_request_id],
+                            skip_conditions: false,
+                            allowed_clock_drift: nil,
+                            skip_subject_confirmation: false,
+                            skip_recipient_check: false,
+                            skip_audience: false)
       response = OneLogin::RubySaml::Response.new(
         saml_response,
         { :settings => @saml_settings,
