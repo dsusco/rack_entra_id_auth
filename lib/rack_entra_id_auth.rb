@@ -1,5 +1,6 @@
 require 'rack_entra_id_auth/version'
 require 'rack_entra_id_auth/configuration'
+require 'rack_entra_id_auth/entra_id_request'
 
 module RackEntraIdAuth
   def self.configure

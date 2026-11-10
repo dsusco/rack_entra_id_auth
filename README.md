@@ -109,7 +109,7 @@ config.exclude_paths = ['/up', %r{\A/assets/}]
 
 ### Single logout
 
-Single logout is disabled by default, so `/logout` only clears the local session. To also sign the user out of Entra ID, switch to a session store that can be cleared server-side, then set:
+Single logout is disabled by default, so `/logout` only clears the local session. To also sign the user out of Entra ID, switch to a session store that can be cleared server-side, such as [entra_id_active_record_session_store](https://github.com/dsusco/entra_id_active_record_session_store), then set:
 
 ```ruby
 config.skip_single_logout = false
