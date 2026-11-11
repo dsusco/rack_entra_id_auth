@@ -8,7 +8,7 @@ The middleware handles single sign-on and single logout with Entra ID. It stores
 
 - Ruby 3.2+
 - Rails 7.2+
-- Rack 3.2+
+- Rack 3.0+
 
 ## Installation
 

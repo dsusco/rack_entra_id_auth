@@ -26,6 +26,6 @@ Gem::Specification.new do |s|
   end
 
   s.add_dependency 'activesupport', '>= 7.2', '< 9'
-  s.add_dependency 'rack', '~> 3.2'
+  s.add_dependency 'rack', '>= 3.0', '< 4'
   s.add_dependency 'ruby-saml', '~> 1.18'
 end
