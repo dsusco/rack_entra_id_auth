@@ -21,6 +21,9 @@ jobs:
       BUNDLE_WITHOUT: lint
     steps:
     - uses: actions/checkout@v4
+    - name: Resolve gems for this Ruby
+      if: matrix.ruby == '3.2'
+      run: rm Gemfile.lock
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
